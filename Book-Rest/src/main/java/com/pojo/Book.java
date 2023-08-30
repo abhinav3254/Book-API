@@ -27,6 +27,17 @@ public class Book {
     @Column(length = 1000)
     private String bookLongThumbnailUrl;
     private String bookPublishStatus;
+    private Double price;
+    
+	public Double getPrice() {
+		return price;
+	}
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+	public void setBookISBN(Long bookISBN) {
+		this.bookISBN = bookISBN;
+	}
 	public Integer getId() {
 		return id;
 	}

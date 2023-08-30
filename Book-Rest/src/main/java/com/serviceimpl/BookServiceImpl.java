@@ -53,6 +53,7 @@ public class BookServiceImpl implements BookService {
 			book.setBookPublishStatus(map.get("publishStatus"));
 			book.setBookShortDesc(map.get("shortDesc"));
 			book.setBookTitle(map.get("title"));
+			book.setPrice(Double.parseDouble(map.get("price")));
 			
 			return book;
 		} catch (Exception e) {

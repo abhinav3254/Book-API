@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.constants.Constants;
 import com.dao.UserDao;
 import com.jwt.JwtUtils;
 import com.jwt.MyUserDetailsService;
@@ -97,7 +98,7 @@ public class UserServiceImpl implements UserService {
 				Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestMap.get("username"), requestMap.get("password")));
 				if (authentication.isAuthenticated()) {
 					if (myUserDetailsService.getUserDetails().getStatus().equalsIgnoreCase("true")) {
-						return new ResponseEntity<String>("{ \"token\" : \""+jwtUtils.generateToken(myUserDetailsService.getUserDetails().getUsername(), myUserDetailsService.getUserDetails().getRole())+"\"}",HttpStatus.OK);
+						return new ResponseEntity<String>("{ \ntoken\" : \""+jwtUtils.generateToken(myUserDetailsService.getUserDetails().getUsername(), myUserDetailsService.getUserDetails().getRole())+"\n}",HttpStatus.OK);
 					} else {
 						String messageBuild = "{"
 								+ "\n message: wait for admin approval"
@@ -109,8 +110,10 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		return new ResponseEntity<String>("SOMETHING WENT WRONG",HttpStatus.INTERNAL_SERVER_ERROR);
+		String message = "{"
+				+ "\n message : SOMETHING WENT WRONG\n"
+						+ "}";
+		return new ResponseEntity<String>(Constants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

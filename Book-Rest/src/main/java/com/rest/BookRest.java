@@ -8,22 +8,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.pojo.Book;
 
-
-@RequestMapping("/book")
+@RequestMapping("book")
 public interface BookRest {
 	
 	@PostMapping("/add")
-	ResponseEntity<String> addBook(@RequestBody(required = true)Map<String, String>requestmap);
-	
+	public ResponseEntity<String> addBook(@RequestBody(required = true)Map<String, String>map);
 	
 	@GetMapping("/all")
-	ResponseEntity<List<Book>> getAllBooks();
+	public ResponseEntity<List<Book>> getAllBooks();
 	
-	@PostMapping("/find")
-	ResponseEntity<List<Book>> getBookByAuthorName(@RequestBody(required = true)Map<String, String> map);
-
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pojo.Book;
 
-@RequestMapping("book")
+@RequestMapping("/book")
 public interface BookRest {
 	
 	@PostMapping("/add")

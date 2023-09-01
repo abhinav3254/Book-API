@@ -2,102 +2,93 @@ package com.serviceimpl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.constants.Constants;
+import com.dao.AuthorDao;
 import com.dao.BookDao;
+import com.dao.PublishersDao;
 import com.jwt.JwtFilter;
+import com.pojo.Author;
 import com.pojo.Book;
+import com.pojo.Publishers;
 import com.service.BookService;
+
 
 @Service
 public class BookServiceImpl implements BookService {
 	
 	@Autowired
-	private JwtFilter jwtFilter;
+	private AuthorDao authorDao;
+	
+	@Autowired
+	private PublishersDao publishersDao;
 	
 	@Autowired
 	private BookDao bookDao;
+	
+	@Autowired
+	private JwtFilter jwtFilter;
 
 	@Override
 	public ResponseEntity<String> addBook(Map<String, String> map) {
 		try {
 			if (jwtFilter.isAdmin()) {
-				bookDao.save(bookConfig(map));
-				return new ResponseEntity<String>("ADDED",HttpStatus.OK);
+				Book book = configBook(map);
+				
+				if (!Objects.isNull(book)) {
+					bookDao.save(book);
+					return new ResponseEntity<String>(Constants.designMessage("ADDED BOOKS"),HttpStatus.OK);
+				} else {
+					return new ResponseEntity<String>(Constants.designMessage("SOME VALUES ARE MISSING"),HttpStatus.BAD_REQUEST);
+				}
 			} else {
-				return new ResponseEntity<String>("UNAUTHORIZED ACCESS",HttpStatus.UNAUTHORIZED);
+				return new ResponseEntity<String>(Constants.designMessage("UNAUTHORIZED ACCESS"),HttpStatus.UNAUTHORIZED);
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		return new ResponseEntity<String>("INTERNAL ISSUE",HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<String>(Constants.designMessage("INTERNAL SERVER ERROR"),HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	private Book bookConfig(Map<String, String> map) {
+	private Book configBook(Map<String, String>map) {
 		try {
 			Book book = new Book();
+			Integer authorId = Integer.parseInt(map.get("authorId"));
 			
-			book.setBookAuthor(map.get("author"));
-			book.setBookCategory(map.get("category"));
-			book.setBookISBN(Long.parseLong(map.get("isbn")));
-			book.setBookLanguage(map.get("language"));
-			book.setBookLongDesc(map.get("longDesc"));
-			book.setBookLongThumbnailUrl(map.get("thumbnail"));
-			book.setBookPageCount(Integer.parseInt(map.get("pageCount")));
-			book.setBookPublisher(map.get("publisher"));
-			book.setBookPublishStatus(map.get("publishStatus"));
-			book.setBookShortDesc(map.get("shortDesc"));
-			book.setBookTitle(map.get("title"));
-			book.setPrice(Double.parseDouble(map.get("price")));
+			Integer publisherId = Integer.parseInt(map.get("publisherId"));
+			
+			Optional<Author> author = authorDao.findById(authorId);
+			Optional<Publishers> publishers = publishersDao.findById(publisherId);
+			
+			book.setAuthor(author.get());
+			book.setPublishers(publishers.get());
+			book.setCategory(map.get("category"));
+			book.setDescription(map.get("description"));
+			book.setGenre(map.get("genre"));
+			book.setImageUrl("image");
+			book.setPrice(map.get("price"));
+			book.setTitle("title");
 			
 			return book;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		throw new RuntimeException("SOMETHING WENT WRONG IN BOOK SERVICE IMPL CLASS");
 	}
 
 	@Override
 	public ResponseEntity<List<Book>> getAllBook() {
-		
 		try {
-			System.out.println("Inside getAll Books");
-			List<Book> listBook = bookDao.getAllBook();
-			if (listBook.isEmpty()) {
-				System.out.println("Book is Empty");
-				return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
-			}
-			return new ResponseEntity<List<Book>>(listBook,HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return new ResponseEntity<List<Book>>(HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-
-	@Override
-	public ResponseEntity<List<Book>> getBookByAuthorName(Map<String, String> map) {
-		try {
-			if (map.containsKey("author")) {
-				System.out.println("AuthorName Called");
-				List<Book> list =  bookDao.getAllBookByAuthorName(map.get("author"));
-				return new ResponseEntity<List<Book>>(list,HttpStatus.OK);
-			} else if (map.containsKey("title")) {
-				System.out.println("title Called");
-				List<Book> list =  bookDao.getBybook_title(map.get("title"));
-				return new ResponseEntity<List<Book>>(list,HttpStatus.OK);
-			} else if (map.containsKey("category")) {
-				System.out.println("Category Called");
-				List<Book> list =  bookDao.getBybook_category(map.get("category"));
-				return new ResponseEntity<List<Book>>(list,HttpStatus.OK);
-			} else {
-				return new ResponseEntity<List<Book>>(HttpStatus.OK);
-			}
+			List<Book> listBooks = bookDao.getAllBooks();
+			return new ResponseEntity<List<Book>>(listBooks,HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

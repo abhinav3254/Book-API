@@ -19,9 +19,10 @@ public class User {
 	private String password;
 	private String phone;
 	private String address;
-	//private LocalDateTime registerDate;
 	private String status;
 	private String role;
+	
+	// getter and setters
 	public Integer getId() {
 		return id;
 	}

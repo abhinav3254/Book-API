@@ -1,14 +1,13 @@
 package com.pojo;
 
+
 import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,33 +22,26 @@ public class Cart {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	private Integer quantity;
-	
-	@OneToMany 
-	private List<Book> book;
+	@OneToMany
+	private List<Book> books;
 
+	// getter and setter
 	public Integer getId() {
 		return id;
 	}
 
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public List<Book> getBook() {
-		return book;
+	public List<Book> getBooks() {
+		return books;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
+	public void setBooks(List<Book> books) {
+		this.books = books;
 	}
-
-	public void setBook(List<Book> book) {
-		this.book = book;
-	}
-
+	
+	
+	
 }

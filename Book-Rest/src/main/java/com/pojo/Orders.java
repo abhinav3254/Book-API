@@ -20,53 +20,29 @@ public class Orders {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	private Double total;
-	
-	private String shippingAddress;
-	
 	@OneToOne
 	private Cart cart;
-	
+
 	@ManyToOne
 	private User user;
-
+	
+	// getters and setters
 	public Integer getId() {
 		return id;
-	}
-
-	public Double getTotal() {
-		return total;
-	}
-
-	public String getShippingAddress() {
-		return shippingAddress;
 	}
 
 	public Cart getCart() {
 		return cart;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public void setTotal(Double total) {
-		this.total = total;
-	}
-
-	public void setShippingAddress(String shippingAddress) {
-		this.shippingAddress = shippingAddress;
 	}
 
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
+	
+	
+	
 }

@@ -25,9 +25,31 @@ public class Cart {
 	
 	private Integer quantity;
 	
-	@OneToMany
-	@JoinColumn(name="cart_id") 
-	@OrderColumn(name="cart_type")  
+	@OneToMany 
 	private List<Book> book;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public List<Book> getBook() {
+		return book;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public void setBook(List<Book> book) {
+		this.book = book;
+	}
 
 }

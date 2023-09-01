@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pojo.GetOrders;
 import com.rest.OrderRest;
 import com.service.OrderService;
 
@@ -29,18 +28,4 @@ public class OrderRestImpl implements OrderRest {
 		}
 		return new ResponseEntity<String>("INTERNAL ISSUE",HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
-	@Override
-	public ResponseEntity<List<GetOrders>> getAllOrder() {
-		
-		try {
-			return orderService.getAllOrder();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return new ResponseEntity<List<GetOrders>>(HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-	
-	
 }

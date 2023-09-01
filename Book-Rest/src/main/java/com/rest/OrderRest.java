@@ -10,15 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.pojo.GetOrders;
 
 @RequestMapping("/order")
 public interface OrderRest {
 	
 	@PostMapping("/addbook")
 	ResponseEntity<String> orderBook(@RequestBody(required = true)Map<String, String>map);
-	
-	@GetMapping("/orders")
-	ResponseEntity<List<GetOrders>> getAllOrder();
 
 }

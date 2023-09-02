@@ -2,6 +2,7 @@ package com.constants;
 
 public class Constants {
 	
+	
 	private Constants() {}
 	
 	public static final String SOMETHING_WENT_WRONG = "{"
@@ -14,5 +15,4 @@ public class Constants {
 						+ "}";
 		 return message;
 	}
-
 }

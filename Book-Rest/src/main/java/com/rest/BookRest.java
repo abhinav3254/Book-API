@@ -20,4 +20,7 @@ public interface BookRest {
 	@GetMapping("/all")
 	public ResponseEntity<List<Book>> getAllBooks();
 	
+	@PostMapping("/search")
+	public ResponseEntity<List<Book>> searchBooks(@RequestBody(required = true)Map<String, String>map);
+	
 }

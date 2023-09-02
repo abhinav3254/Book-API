@@ -1,5 +1,6 @@
 package com.serviceimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import com.dao.CartDao;
 import com.dao.OrdersDao;
 import com.dao.UserDao;
 import com.jwt.JwtUtils;
+import com.pojo.Book;
 import com.pojo.Cart;
 import com.pojo.Orders;
 import com.pojo.User;
@@ -33,16 +35,25 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private OrdersDao ordersDao;
 	
+	
 	@Autowired
 	private JwtUtils jwtUtils;
 
 	@Override
 	public ResponseEntity<String> placeOrder(Map<String, String> map) {
 		try {
-			
-			System.out.println(map.get("cartId"));
 			Orders orders = orderConfig(map);
 			ordersDao.save(orders);
+			
+			Cart cart = cartDao.getById(Integer.parseInt(map.get("cartId")));
+			cartDao.deleteCartBooksByCartId(cart.getId().toString());
+			
+			// finding current user 
+			Authentication authentication = SecurityContextHolder. getContext(). getAuthentication();
+			String token = authentication.getName();
+			String username = jwtUtils.extractUsername(token);
+			User user = userDao.getUserByUserName(username);
+			cartDao.deleteCartByUserId(user.getId().toString());
 			return new ResponseEntity<String>(Constants.designMessage("Order Placed"),HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -56,8 +67,6 @@ public class OrderServiceImpl implements OrderService {
 			
 			Cart cart = cartDao.getById(Integer.parseInt(map.get("cartId")));
 			
-			orders.setCart(cart);
-			
 			Authentication authentication = SecurityContextHolder. getContext(). getAuthentication();
 			String token = authentication.getName();
 			
@@ -65,7 +74,11 @@ public class OrderServiceImpl implements OrderService {
 			
 			User user = userDao.getUserByUserName(username);
 			
+			List<Book> orderBooks = new ArrayList<>(cart.getBooks());
+			
+			orders.setBooks(orderBooks);
 			orders.setUser(user);
+			System.out.println(" -- >> abhinav"+orders.getBooks().toString());
 			
 			return orders;
 		} catch (Exception e) {
@@ -77,7 +90,14 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public ResponseEntity<List<Orders>> getAllOrders() {
 		try {
-			List<Orders> listOrders = ordersDao.getAllOrders();
+			Authentication authentication = SecurityContextHolder. getContext(). getAuthentication();
+			String token = authentication.getName();
+			
+			String username = jwtUtils.extractUsername(token);
+			
+			User user = userDao.getUserByUserName(username);
+			
+			List<Orders> listOrders = ordersDao.getAllOrders(user.getId().toString());
 			return new ResponseEntity<List<Orders>>(listOrders,HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

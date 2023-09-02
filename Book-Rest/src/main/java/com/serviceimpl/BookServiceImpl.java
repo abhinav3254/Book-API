@@ -73,9 +73,9 @@ public class BookServiceImpl implements BookService {
 			book.setCategory(map.get("category"));
 			book.setDescription(map.get("description"));
 			book.setGenre(map.get("genre"));
-			book.setImageUrl("image");
+			book.setImageUrl(map.get("image"));
 			book.setPrice(map.get("price"));
-			book.setTitle("title");
+			book.setTitle(map.get("title"));
 			
 			return book;
 		} catch (Exception e) {
@@ -89,6 +89,18 @@ public class BookServiceImpl implements BookService {
 		try {
 			List<Book> listBooks = bookDao.getAllBooks();
 			return new ResponseEntity<List<Book>>(listBooks,HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<List<Book>>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@Override
+	public ResponseEntity<List<Book>> searchBooks(Map<String, String> map) {
+		try {
+			String value = map.get("value");
+			List<Book> listBook = bookDao.findBookByValue(value);
+			return new ResponseEntity<List<Book>>(listBook,HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

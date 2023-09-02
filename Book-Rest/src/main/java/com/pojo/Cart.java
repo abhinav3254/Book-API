@@ -8,14 +8,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
 @Entity
-@NoArgsConstructor
-@Data
+//@NoArgsConstructor
+//@Data
 public class Cart {
 	
 	@Id
@@ -24,24 +25,36 @@ public class Cart {
 	
 	@OneToMany
 	private List<Book> books;
+	
+	@OneToOne
+	private User user;
 
+	
 	// getter and setter
+	
 	public Integer getId() {
 		return id;
-	}
-
-	public List<Book> getBooks() {
-		return books;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
+	public List<Book> getBooks() {
+		return books;
+	}
+
 	public void setBooks(List<Book> books) {
 		this.books = books;
 	}
-	
-	
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	
 }
